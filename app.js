@@ -2,14 +2,20 @@ const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
 const app = express();
+const axios = require('axios');
+app.set('views', './views')
+app.set('view engine', 'pug')
 const uploaded_files = [];
+const path = require('path');
+// app.use("/public", express.static(path.join(__dirname, 'public')))
+
 
 var storage = multer.diskStorage({
     destination: function(req, file, cb){
         cb(null, './public/uploads')
     },
     filename:function(req, file, cb){
-        const uniqueSuffix = Date.now() + '.png';
+        const uniqueSuffix = Date.now() + '.jpg';
         cb(null, file.fieldname + '-' + uniqueSuffix)
     }
 })
@@ -19,34 +25,27 @@ var upload = multer({storage:storage})
 app.get('/', (req, res) => {
     const path='./public/uploads';
     fs.readdir(path, function(err, items) {
-        console.log(items);
-        const images = items.map((image) => {
-            return (`<img style='height:200px' src='./uploads/${image}'/>`)
+    //     const images = items.map((image) => {
+    //         return (`<img style='height:200px' src='./uploads/${image}'/>`)
+    // })
+    res.render('index', {
+        images:items
     })
-    res.send(`
-        <h1>Photo Sharing Service</h1>
-        <form method="post" action="/upload" enctype="multipart/form-data">
-            <div>
-                <label for="image">Upload a picture</label>
-                <input type="file" id="image" name="image">
-            </div>
-            <div>
-                <button>Submit</button>
-            </div>
-        </form>
-        <h2>Uploaded Images</h2>
-        ${images}
-        `);
     });
 })
 
 app.post('/upload', upload.single('image'), function(req, res, next){
+    const path = './public/uploads'
     // request.file is the \`myFile\` file
     // request.body will hold the text fields, if there were any
     uploaded_files.push(req.file.filename);
     console.log("Uploaded: " + req.file.filename);
+
     fs.readdir('.public/uploads', function(err, files){
         console.log(files)
+        res.render('uploads', {
+            uploaded:req.file.filename
+        })
         res.send( `
             <div>
                 <h1>Success!</h1>
@@ -55,7 +54,8 @@ app.post('/upload', upload.single('image'), function(req, res, next){
                     <img src='http://localhost:3000/uploads/${req.file.filename}'/>
                 </form>
             </div>
-        `)}
+        `)
+    }
     )
 });
 
