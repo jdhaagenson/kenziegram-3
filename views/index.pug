@@ -1,0 +1,15 @@
+html
+    head
+        title="Kenziegram 2 | Home"
+    body
+        h1="Photo Sharing Service"
+        form(action="/uploads", method="post", enctype="multipart/form-data")
+            div
+                label(for="image")="Upload a picture"
+                input(id="image" type="file", name="image")
+            div
+                button(type="submit")="Submit"
+        h2="Uploaded Images"
+        div
+            for item in images
+                img(src= "./uploads/"+item, alt="uploaded image", style={height:'200px'})
