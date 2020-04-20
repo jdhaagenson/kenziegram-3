@@ -61,6 +61,9 @@ app.post('/uploads', upload.single('image'), (req, res, next) => {
     )
 });
 
+app.get('/poll', (req, res)=> {
+    res.send({image: "This is an example "})
+})
 
 // app.route('/')
 
