@@ -3,10 +3,12 @@ const multer = require('multer');
 const fs = require('fs');
 const app = express();
 const axios = require('axios');
-app.set('views', './views')
-app.set('view engine', 'pug')
 const uploaded_files = [];
 const path = require('path');
+console.log(__dirname)
+app.set('view engine', 'pug')
+app.set('views', './views')
+
 // app.use("/public", express.static(path.join(__dirname, 'public')))
 
 
@@ -34,8 +36,8 @@ app.get('/', (req, res) => {
     });
 })
 
-app.post('/upload', upload.single('image'), function(req, res, next){
-    const path = './public/uploads'
+app.post('/uploads', upload.single('image'), function(req, res, next){
+    // const path = './public/uploads'
     // request.file is the \`myFile\` file
     // request.body will hold the text fields, if there were any
     uploaded_files.push(req.file.filename);
@@ -46,15 +48,15 @@ app.post('/upload', upload.single('image'), function(req, res, next){
         res.render('uploads', {
             uploaded:req.file.filename
         })
-        res.send( `
-            <div>
-                <h1>Success!</h1>
-                <form method="get" action="/" enctype="multipart/form-data">
-                    <button style="display:block">Back to Home</button>
-                    <img src='http://localhost:3000/uploads/${req.file.filename}'/>
-                </form>
-            </div>
-        `)
+        // res.send( `
+        //     <div>
+        //         <h1>Success!</h1>
+        //         <form method="get" action="/" enctype="multipart/form-data">
+        //             <button style="display:block">Back to Home</button>
+        //             <img src='http://localhost:3000/uploads/${req.file.filename}'/>
+        //         </form>
+        //     </div>
+        // `)
     }
     )
 });
