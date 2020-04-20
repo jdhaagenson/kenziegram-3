@@ -4,7 +4,7 @@ const fs = require('fs');
 const app = express();
 const axios = require('axios');
 const uploaded_files = [];
-const path = require('path');
+// const path = require('path');
 console.log(__dirname)
 app.set('view engine', 'pug')
 app.set('views', './views')
@@ -36,14 +36,14 @@ app.get('/', (req, res) => {
     });
 })
 
-app.post('/uploads', upload.single('image'), function(req, res, next){
-    // const path = './public/uploads'
+app.post('/uploads', upload.single('image'), (req, res, next) => {
+    const path = './uploads'
     // request.file is the \`myFile\` file
     // request.body will hold the text fields, if there were any
     uploaded_files.push(req.file.filename);
     console.log("Uploaded: " + req.file.filename);
 
-    fs.readdir('.public/uploads', function(err, files){
+    fs.readdir('./public/uploads', function(err, files){
         console.log(files)
         res.render('uploads', {
             uploaded:req.file.filename
@@ -62,8 +62,9 @@ app.post('/uploads', upload.single('image'), function(req, res, next){
 });
 
 
-app.route('/')
+// app.route('/')
 
 app.use(express.static('./public'))
+
 const port = 3000
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
